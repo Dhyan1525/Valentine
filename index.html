@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Question</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin: 20px 0;
+            color: #333;
+        }
+        
+        .buttons {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+            min-height: 60px;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        .yes {
+            background: #ff1744;
+            color: white;
+        }
+        
+        .no {
+            background: #e0e0e0;
+            color: #666;
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+        
+        .note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .response {
+            display: none;
+            margin-top: 30px;
+            font-size: 24px;
+            color: #ff1744;
+        }
+        
+        .sad-response {
+            display: none;
+            margin-top: 30px;
+            font-size: 20px;
+            color: #666;
+        }
+        
+        .celebration-gif {
+            display: none;
+            margin-top: 20px;
+            max-width: 300px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🐱💕</div>
+        <h1>Will you be my Valentine?</h1>
+        <div class="buttons">
+            <button class="yes" onclick="handleYes()">Yes</button>
+            <button class="no" id="noBtn" onclick="handleNo(event)">No</button>
+        </div>
+        <div class="note">*"No" seems a bit shy 💜</div>
+        <div class="response" id="response"></div>
+        <img src="jonah-hill-excited.gif" alt="celebration" class="celebration-gif" id="celebrationGif">
+        <div class="sad-response" id="sadResponse">💔 Really? Are you sure?</div>
+    </div>
+
+    <script>
+        let repelStrength = 100;
+        let hasClickedNo = false;
+        
+        function handleYes() {
+            document.querySelector('.buttons').style.display = 'none';
+            document.querySelector('.note').style.display = 'none';
+            document.getElementById('sadResponse').style.display = 'none';
+            document.getElementById('response').style.display = 'block';
+            document.getElementById('response').textContent = '❤️ Best decision ever! ❤️';
+            document.getElementById('celebrationGif').style.display = 'block';
+        }
+        
+        function handleNo(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            if (!hasClickedNo) {
+                hasClickedNo = true;
+                document.getElementById('sadResponse').style.display = 'block';
+                repelStrength = 150; // Make it even harder to catch
+            }
+            
+            runAway(event);
+        }
+        
+        function runAway(event) {
+            const noBtn = document.getElementById('noBtn');
+            const container = document.querySelector('.container');
+            const btnRect = noBtn.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+            
+            // Get mouse position
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+            
+            // Calculate direction away from mouse
+            const deltaX = btnCenterX - mouseX;
+            const deltaY = btnCenterY - mouseY;
+            
+            // Calculate distance
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            // Normalize and apply repulsion force (uses variable repelStrength)
+            const moveX = (deltaX / distance) * repelStrength;
+            const moveY = (deltaY / distance) * repelStrength;
+            
+            // Get current position
+            const currentLeft = parseFloat(noBtn.style.left) || 0;
+            const currentTop = parseFloat(noBtn.style.top) || 0;
+            
+            // Calculate new position
+            let newLeft = currentLeft + moveX;
+            let newTop = currentTop + moveY;
+            
+            // Calculate button's position relative to container
+            const buttonsDiv = document.querySelector('.buttons');
+            const buttonsDivRect = buttonsDiv.getBoundingClientRect();
+            
+            // Boundary checks - keep within container
+            const padding = 20; // Distance from container edge
+            const maxLeft = (containerRect.right - buttonsDivRect.left - btnRect.width - padding);
+            const minLeft = -(buttonsDivRect.left - containerRect.left - padding);
+            const maxTop = (containerRect.bottom - buttonsDivRect.top - btnRect.height - padding);
+            const minTop = -(buttonsDivRect.top - containerRect.top - padding);
+            
+            newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
+            newTop = Math.max(minTop, Math.min(maxTop, newTop));
+            
+            // Apply new position
+            noBtn.style.left = newLeft + 'px';
+            noBtn.style.top = newTop + 'px';
+        }
+        
+        // Track mouse movement near the button
+        document.addEventListener('mousemove', function(event) {
+            const noBtn = document.getElementById('noBtn');
+            if (!noBtn) return;
+            
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+            
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
+            
+            const distance = Math.sqrt(
+                Math.pow(btnCenterX - mouseX, 2) + 
+                Math.pow(btnCenterY - mouseY, 2)
+            );
+            
+            // Activate repulsion when mouse gets close
+            if (distance < 150) {
+                runAway(event);
+            }
+        });
+    </script>
+</body>
+</html>
