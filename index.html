@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,29 +17,193 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             overflow: hidden;
         }
-        
+
         .container {
             text-align: center;
             background: white;
-            padding: 60px 40px;
+            padding: 80px 60px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 650px;
+            min-height: 400px;
             position: relative;
             z-index: 1;
         }
-        
+
         .emoji {
             font-size: 80px;
             margin-bottom: 20px;
         }
-        
+
+        .emoji img {
+            transition: filter 0.3s ease;
+        }
+
+        /* Bear annoyance animations */
+        @keyframes shake-mild {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(-5deg);
+            }
+
+            75% {
+                transform: rotate(5deg);
+            }
+        }
+
+        @keyframes shake-medium {
+
+            0%,
+            100% {
+                transform: rotate(0deg) scale(1.05);
+            }
+
+            20% {
+                transform: rotate(-8deg) scale(1.05);
+            }
+
+            40% {
+                transform: rotate(8deg) scale(1.05);
+            }
+
+            60% {
+                transform: rotate(-8deg) scale(1.05);
+            }
+
+            80% {
+                transform: rotate(8deg) scale(1.05);
+            }
+        }
+
+        @keyframes shake-intense {
+
+            0%,
+            100% {
+                transform: rotate(0deg) scale(1.1);
+            }
+
+            10% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+
+            20% {
+                transform: rotate(10deg) scale(1.1);
+            }
+
+            30% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+
+            40% {
+                transform: rotate(10deg) scale(1.1);
+            }
+
+            50% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+
+            60% {
+                transform: rotate(10deg) scale(1.1);
+            }
+
+            70% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+
+            80% {
+                transform: rotate(10deg) scale(1.1);
+            }
+
+            90% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+        }
+
+        .bear-annoyed-1 {
+            animation: shake-mild 0.4s ease;
+        }
+
+        .bear-annoyed-2 {
+            animation: shake-medium 0.4s ease;
+            filter: sepia(20%) saturate(150%) hue-rotate(-10deg);
+        }
+
+        .bear-annoyed-3 {
+            animation: shake-medium 0.3s ease;
+            filter: sepia(40%) saturate(200%) hue-rotate(-20deg);
+        }
+
+        .bear-annoyed-4 {
+            animation: shake-intense 0.3s ease;
+            filter: sepia(60%) saturate(300%) hue-rotate(-30deg);
+        }
+
+        .bear-annoyed-5 {
+            animation: shake-intense 0.25s ease infinite;
+            filter: sepia(80%) saturate(400%) hue-rotate(-40deg) brightness(0.9);
+        }
+
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -10vh;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            position: fixed;
+            top: -10px;
+            z-index: 9999;
+            animation: fallDown linear forwards;
+        }
+
+        @keyframes fallDown {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+
+
         h1 {
             font-size: 32px;
             margin: 20px 0;
             color: #333;
         }
-        
+
         .buttons {
             margin-top: 40px;
             display: flex;
@@ -47,7 +212,7 @@
             position: relative;
             min-height: 60px;
         }
-        
+
         button {
             padding: 15px 40px;
             font-size: 18px;
@@ -56,166 +221,331 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-        
+
         button:hover {
             transform: scale(1.05);
         }
-        
+
         .yes {
             background: #ff1744;
             color: white;
         }
-        
+
         .no {
             background: #e0e0e0;
             color: #666;
-            position: absolute;
             transition: all 0.3s ease;
         }
-        
-        .note {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #999;
+
+        .no.running {
+            position: absolute;
         }
-        
+
+        .gif-container {
+            display: none;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+
+
         .response {
             display: none;
             margin-top: 30px;
             font-size: 24px;
             color: #ff1744;
         }
-        
+
         .sad-response {
             display: none;
             margin-top: 30px;
             font-size: 20px;
             color: #666;
         }
-        
+
         .celebration-gif {
-            display: none;
-            margin-top: 20px;
-            margin-left: auto;
-            margin-right: auto;
             max-width: 300px;
             border-radius: 10px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <div class="emoji">🐱💕</div>
-        <h1>Will you be my Valentine?</h1>
+        <div class="emoji">
+            <img src="bear.gif" alt="cute bear" style="width: 120px; height: 120px; vertical-align: middle;">
+        </div>
+        <h1>Rani, will you be my Valentine?</h1>
         <div class="buttons">
             <button class="yes" onclick="handleYes()">Yes</button>
             <button class="no" id="noBtn" onclick="handleNo(event)">No</button>
         </div>
-        <div class="note">*"No" seems a bit shy 💜</div>
+
         <div class="response" id="response"></div>
-        <img src="jonah-hill-excited.gif" alt="celebration" class="celebration-gif" id="celebrationGif">
+        <div class="gif-container" id="gifContainer">
+            <img src="jonah-hill-excited.gif" alt="celebration" class="celebration-gif" id="celebrationGif">
+        </div>
         <div class="sad-response" id="sadResponse">💔 Really? Are you sure?</div>
     </div>
 
     <script>
         let repelStrength = 100;
-        let hasClickedNo = false;
-        
+        let noClickCount = 0;
+        let yesScale = 1;
+        let noScale = 1;
+
+        const messages = [
+            "💔 Really? Are you sure?",
+            "🥺 Try again...",
+            "😢 Pretty please",
+            "⚠️ Last Chance!",
+            "🚨 Last Chance again!!!"
+        ];
+
         function handleYes() {
             document.querySelector('.buttons').style.display = 'none';
-            document.querySelector('.note').style.display = 'none';
+
+            document.querySelector('h1').style.display = 'none';
             document.getElementById('sadResponse').style.display = 'none';
             document.getElementById('response').style.display = 'block';
-            document.getElementById('response').textContent = '❤️ Best decision ever! ❤️';
-            document.getElementById('celebrationGif').style.display = 'block';
+            document.getElementById('response').textContent = '❤️ I knew you would say YES! ❤️';
+            document.getElementById('gifContainer').style.display = 'flex';
+
+            // Replace bear with happy bears gif
+            const bearImg = document.querySelector('.emoji img');
+            bearImg.classList.remove('bear-annoyed-1', 'bear-annoyed-2', 'bear-annoyed-3', 'bear-annoyed-4', 'bear-annoyed-5');
+            bearImg.src = 'happy bears.gif';
+            bearImg.style.width = '200px';
+            bearImg.style.height = 'auto';
+
+            // Start confetti
+            startConfetti();
         }
-        
+
         function handleNo(event) {
             event.preventDefault();
             event.stopPropagation();
-            
-            if (!hasClickedNo) {
-                hasClickedNo = true;
-                document.getElementById('sadResponse').style.display = 'block';
-                repelStrength = 150; // Make it even harder to catch
-            }
-            
+
+            // Show message and update based on click count
+            const sadResponse = document.getElementById('sadResponse');
+            sadResponse.style.display = 'block';
+
+            // Update message based on click count
+            const messageIndex = Math.min(noClickCount, messages.length - 1);
+            sadResponse.textContent = messages[messageIndex];
+
+            // Increase click count
+            noClickCount++;
+
+            // Make Yes button bigger
+            yesScale += 0.3;
+            const yesBtn = document.querySelector('.yes');
+            yesBtn.style.transform = `scale(${yesScale})`;
+
+            // Make No button smaller
+            noScale = Math.max(0.5, noScale - 0.1);
+            const noBtn = document.getElementById('noBtn');
+            noBtn.style.transform = `scale(${noScale})`;
+
+            // Make No run away faster each click
+            repelStrength += 30;
+
+            // Make the bear increasingly annoyed
+            const bearImg = document.querySelector('.emoji img');
+            // Remove all previous annoyance classes
+            bearImg.classList.remove('bear-annoyed-1', 'bear-annoyed-2', 'bear-annoyed-3', 'bear-annoyed-4', 'bear-annoyed-5');
+            // Force reflow to restart animation
+            void bearImg.offsetWidth;
+            // Add appropriate annoyance level
+            const annoyanceLevel = Math.min(noClickCount, 5);
+            bearImg.classList.add(`bear-annoyed-${annoyanceLevel}`);
+
             runAway(event);
         }
-        
+
         function runAway(event) {
             const noBtn = document.getElementById('noBtn');
+            noBtn.classList.add('running');
             const container = document.querySelector('.container');
             const btnRect = noBtn.getBoundingClientRect();
             const containerRect = container.getBoundingClientRect();
-            
+
             const btnCenterX = btnRect.left + btnRect.width / 2;
             const btnCenterY = btnRect.top + btnRect.height / 2;
-            
+
             // Get mouse position
             const mouseX = event.clientX;
             const mouseY = event.clientY;
-            
+
             // Calculate direction away from mouse
             const deltaX = btnCenterX - mouseX;
             const deltaY = btnCenterY - mouseY;
-            
+
             // Calculate distance
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            
+
             // Normalize and apply repulsion force (uses variable repelStrength)
             const moveX = (deltaX / distance) * repelStrength;
             const moveY = (deltaY / distance) * repelStrength;
-            
+
             // Get current position
             const currentLeft = parseFloat(noBtn.style.left) || 0;
             const currentTop = parseFloat(noBtn.style.top) || 0;
-            
+
             // Calculate new position
             let newLeft = currentLeft + moveX;
             let newTop = currentTop + moveY;
-            
+
             // Calculate button's position relative to container
             const buttonsDiv = document.querySelector('.buttons');
             const buttonsDivRect = buttonsDiv.getBoundingClientRect();
-            
+
             // Boundary checks - keep within container
-            const padding = 20; // Distance from container edge
+            const padding = 40; // Distance from container edge
             const maxLeft = (containerRect.right - buttonsDivRect.left - btnRect.width - padding);
             const minLeft = -(buttonsDivRect.left - containerRect.left - padding);
             const maxTop = (containerRect.bottom - buttonsDivRect.top - btnRect.height - padding);
             const minTop = -(buttonsDivRect.top - containerRect.top - padding);
-            
+
+            // Soft wall repulsion - push away from edges
+            const wallRepelStrength = 50;
+            const wallThreshold = 80; // Distance from wall to start repelling
+
+            // Check distance to each wall and add repulsion
+            const distToLeft = newLeft - minLeft;
+            const distToRight = maxLeft - newLeft;
+            const distToTop = newTop - minTop;
+            const distToBottom = maxTop - newTop;
+
+            // Repel from left wall
+            if (distToLeft < wallThreshold) {
+                newLeft += (wallThreshold - distToLeft) * 0.5;
+            }
+            // Repel from right wall
+            if (distToRight < wallThreshold) {
+                newLeft -= (wallThreshold - distToRight) * 0.5;
+            }
+            // Repel from top wall
+            if (distToTop < wallThreshold) {
+                newTop += (wallThreshold - distToTop) * 0.5;
+            }
+            // Repel from bottom wall
+            if (distToBottom < wallThreshold) {
+                newTop -= (wallThreshold - distToBottom) * 0.5;
+            }
+
             newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
             newTop = Math.max(minTop, Math.min(maxTop, newTop));
-            
+
             // Apply new position
             noBtn.style.left = newLeft + 'px';
             noBtn.style.top = newTop + 'px';
         }
-        
+
         // Track mouse movement near the button
-        document.addEventListener('mousemove', function(event) {
+        document.addEventListener('mousemove', function (event) {
             const noBtn = document.getElementById('noBtn');
             if (!noBtn) return;
-            
+
             const btnRect = noBtn.getBoundingClientRect();
             const btnCenterX = btnRect.left + btnRect.width / 2;
             const btnCenterY = btnRect.top + btnRect.height / 2;
-            
+
             const mouseX = event.clientX;
             const mouseY = event.clientY;
-            
+
             const distance = Math.sqrt(
-                Math.pow(btnCenterX - mouseX, 2) + 
+                Math.pow(btnCenterX - mouseX, 2) +
                 Math.pow(btnCenterY - mouseY, 2)
             );
-            
+
             // Activate repulsion when mouse gets close
             if (distance < 150) {
                 runAway(event);
             }
         });
+
+        // Floating Background Hearts
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+
+            const icons = ['❤️', '💖', '💜', '💕', '🐻', '🌸'];
+            heart.textContent = icons[Math.floor(Math.random() * icons.length)];
+
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+
+            const duration = Math.random() * 10 + 15; // 15-25s
+            heart.style.animationDuration = duration + 's';
+
+            // Randomize delay so they don't all start at once if we batch created (not used here but good practice)
+            heart.style.animationDelay = '-' + (Math.random() * 15) + 's';
+
+            // Add to background container
+            let container = document.querySelector('.hearts-bg');
+            if (!container) {
+                container = document.createElement('div');
+                container.className = 'hearts-bg';
+                document.body.prepend(container);
+            }
+            container.appendChild(heart);
+
+            // Cleanup
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        // Create hearts periodically
+        setInterval(createFloatingHeart, 800);
+
+        // Create some initial hearts so it's not empty
+        for (let i = 0; i < 20; i++) {
+            createFloatingHeart();
+            // Manually position initial hearts
+            const lastHeart = document.querySelector('.floating-heart:last-child');
+            if (lastHeart) lastHeart.style.bottom = Math.random() * 100 + 'vh';
+        }
+
+        // Confetti Function
+        function startConfetti() {
+            // Intense confetti for 5 seconds
+            const duration = 5000;
+            const end = Date.now() + duration;
+
+            const confettiInterval = setInterval(function () {
+                if (Date.now() > end) {
+                    return clearInterval(confettiInterval);
+                }
+
+                // Create multiple confetti pieces per tick
+                for (let i = 0; i < 5; i++) {
+                    createConfettiPiece();
+                }
+            }, 100);
+        }
+
+        function createConfettiPiece() {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+
+            const icons = ['❤️', '💖', '💜', '💕', '🐻', '🎉', '🥰'];
+            confetti.textContent = icons[Math.floor(Math.random() * icons.length)];
+
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+
+            document.body.appendChild(confetti);
+
+            setTimeout(() => {
+                confetti.remove();
+            }, 4000);
+        }
+
+
     </script>
 </body>
+
 </html>
